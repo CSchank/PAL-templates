@@ -49,7 +49,7 @@ library:
     - src
 
 executables:
-  server-exe:
+  pal-server-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -61,7 +61,7 @@ executables:
     - server
 
 tests:
-  server-test:
+  pal-server-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
