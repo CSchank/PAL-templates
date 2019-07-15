@@ -215,10 +215,11 @@ update msg model =
                     |> withCmd
                         (Cmd.map (\out -> 
                             case Static.Update.outgoingToIncoming out of
-                                Left cmd ->
+                                Just (Left cmd) ->
                                     IncomingMsg cmd
-                                Right outT ->
+                                Just (Right outT) ->
                                     OutgoingTrans outT
+                                Nothing -> NoOp
                         ) mCmd)
         OutgoingTrans trans ->
             let
@@ -226,8 +227,8 @@ update msg model =
                 newTrans = Static.Update.outgoingToIncoming trans
             in
                 case (respTxt,newTrans) of
-                    (Just str, Right _) -> model |> wsSend str
-                    (Nothing, Left nt) -> model |> withCmd (Cmd.map IncomingMsg <| newMsg nt)
+                    (Just str, Just (Right _)) -> model |> wsSend str
+                    (Nothing, Just (Left nt)) -> model |> withCmd (Cmd.map IncomingMsg <| newMsg nt)
                     _ -> model |> withNoCmd
         NoOp -> model |> withNoCmd
         {-OutgoingTrans outgoingTrans ->
